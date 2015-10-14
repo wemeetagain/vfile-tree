@@ -3,14 +3,16 @@
 (defpackage #:vfile-tree
   (:use #:cl #:vfile)
   (:import-from #:path-string
-                #:*sep*
+		#:*sep*
                 #:basename
-                #:dirname)
+		#:dirname)
   (:import-from #:uiop
-                #:directory-files
+		#:directory-files
                 #:directory-exists-p
-                #:subdirectories)
+		#:subdirectories)
   (:export #:vfile-node
-           #:vfile-directory-open
-           #:traverse-filesystem
+	   #:vfile-directory-node
+	   #:vfile-directory-p
+	   #:vfile-children
+	   #:traverse-filesystem
            #:make-vfile-tree))

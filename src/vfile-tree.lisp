@@ -1,19 +1,22 @@
 (cl:in-package :vfile-tree)
 
 (defclass vfile-node (vfile)
-  ((%children
+  ((%directory-p
+    :initarg :directory-p
+    :accessor vfile-directory-p
+    :initform nil)))
+
+(defclass vfile-directory-node (vfile-node)
+  ((%directory-p
+    :initarg :directory-p
+    :accessor vfile-directory-p
+    :initform t)
+   (%children
      :initarg :children
      :accessor vfile-children
      :initform nil)))
 
-(defgeneric vfile-directory-open (node &rest rest))
-
-(defmethod vfile-open ((n vfile-node) &rest rest)
-  (if (vfile-directory-p n)
-      (apply #'vfile-directory-open n rest)
-      (call-next-method)))
-
-(defmethod vfile-directory-open ((n vfile-node) &rest rest)
+(defmethod vfile-open ((n vfile-directory-node) &rest rest)
     (apply #'make-concatenated-stream
 	   (loop for node in (vfile-children n)
 	      collect (apply #'vfile-open node rest))))
@@ -51,14 +54,11 @@
 		       (lambda (file)
 			 (make-instance 'vfile-node
 					:base base
-					:directory-p nil
 					:history (list file)
-					:contents (pathname file)
-					:children nil))
+					:contents (pathname file)))
 		       (lambda (directory subfiles)
-			 (make-instance 'vfile-node
+			 (make-instance 'vfile-directory-node
 					:base base
-					:directory-p t
 					:history (list file)
 					:contents (pathname directory)
 					:children subfiles))
