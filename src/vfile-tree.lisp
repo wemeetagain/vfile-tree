@@ -59,7 +59,7 @@
 		       (lambda (directory subfiles)
 			 (make-instance 'vfile-directory-node
 					:base base
-					:history (list file)
+					:history (list directory)
 					:contents (pathname directory)
 					:children subfiles))
 		       :recurse-p recurse-p
